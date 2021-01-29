@@ -366,7 +366,7 @@ class WP_Auth0_LoginManager {
 				'remember'      => $remember_users_session,
 			]
 		);
-
+		$_SESSION['access_token'] = $access_token;
 		wp_set_auth_cookie( $user->ID, $remember_users_session, $secure_cookie );
 		do_action( 'wp_login', $user->user_login, $user );
 		do_action( 'auth0_user_login', $user->ID, $userinfo, $is_new, $id_token, $access_token, $refresh_token );

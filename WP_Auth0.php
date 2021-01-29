@@ -138,6 +138,32 @@ function wp_auth0_add_allowed_redirect_hosts( $hosts ) {
 
 add_filter( 'allowed_redirect_hosts', 'wp_auth0_add_allowed_redirect_hosts' );
 
+
+/**
+* Adjust the authorize URL parameters to add an audience value specified in extra_config used for auto-login and universal login page.
+*
+* @param array  $params - Existing URL parameters.
+* @param string $extra_conf - Extra config object.
+*
+* @return mixed
+*/
+
+function wp_auth0_authorize_url_params( $params, $extra_conf ) {
+
+	$options    = WP_Auth0_Options::Instance();
+	$extra_conf = $options->get('extra_conf');
+	if (!empty($extra_conf)) {
+		$json = json_decode($extra_conf, true);
+		$key = 'audience';
+		$audience = $json['auth']['params'][$key];
+		$params['audience'] = $audience;
+	}
+	return $params;
+}
+
+add_filter( 'auth0_authorize_url_params', 'wp_auth0_authorize_url_params', 10, 3);
+
+
 /**
  * Enqueue login page CSS if plugin is configured.
  */
